@@ -1,0 +1,181 @@
+.create-trip-page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+
+  padding: 40px 24px 80px;
+}
+
+.create-trip-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding: 16px 18px;
+
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+
+  border-radius: 14px;
+
+  color: #e11d48;
+
+  margin-bottom: 24px;
+
+  span {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.create-trip-hero {
+  margin-bottom: 32px;
+
+  &__badge {
+    width: fit-content;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    margin: 0;
+
+    font-size: 42px;
+    line-height: 1.1;
+
+    font-weight: 800;
+
+    color: #0f172a;
+  }
+
+  p {
+    margin-top: 16px;
+
+    max-width: 760px;
+
+    color: #64748b;
+
+    font-size: 18px;
+    line-height: 1.7;
+  }
+}
+
+.create-trip-error {
+  margin-bottom: 24px;
+
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+
+  color: #e11d48;
+
+  padding: 16px 18px;
+
+  border-radius: 14px;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.create-trip-loading {
+  min-height: 400px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 18px;
+
+  p {
+    color: #64748b;
+    font-size: 15px;
+  }
+}
+
+.loader {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  border: 3px solid #dbeafe;
+  border-top-color: #2563eb;
+
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* responsive */
+@media (max-width: 1024px) {
+  .create-trip-page {
+    padding: 32px 20px 60px;
+  }
+
+  .create-trip-hero {
+    h1 {
+      font-size: 42px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .create-trip-page {
+    padding: 24px 14px 50px;
+  }
+
+  .create-trip-hero {
+    margin-bottom: 24px;
+
+    h1 {
+      font-size: 34px;
+    }
+
+    p {
+      margin-top: 12px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .create-trip-hero {
+    h1 {
+      font-size: 28px;
+    }
+
+    &__badge {
+      font-size: 12px;
+      padding: 7px 12px;
+    }
+  }
+}

@@ -1,0 +1,411 @@
+.trip-personalization {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+
+  &__body {
+    padding: 32px 40px;
+  }
+
+  &__header {
+    margin-bottom: 28px;
+    text-align: center;
+
+    h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    p {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #64748b;
+    }
+  }
+
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__footer {
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px solid #e2e8f0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.trip-step {
+  min-height: 70px;
+  border-bottom: 1px solid #e2e8f0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  padding: 14px 18px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    span {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+
+      background: #e2e8f0;
+      color: #475569;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    &--active {
+      color: #2563eb;
+
+      span {
+        background: #2563eb;
+        color: #ffffff;
+      }
+    }
+  }
+
+  &__line {
+    width: 140px;
+    border-top: 2px dashed #cbd5e1;
+
+    &--active {
+      border-color: #60a5fa;
+    }
+  }
+}
+
+.personal-section {
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+
+    h3 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    p {
+      margin: 5px 0 0;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+
+  &__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &--blue {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    &--rose {
+      background: #fff1f2;
+      color: #f43f5e;
+    }
+
+    &--green {
+      background: #ecfdf5;
+      color: #059669;
+    }
+  }
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.option-card {
+  min-height: 48px;
+  padding: 10px 14px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  cursor: pointer;
+  text-align: left;
+
+  transition: 0.2s ease;
+
+  &:hover {
+    border-color: #93c5fd;
+    background: #f8fbff;
+  }
+
+  &--active {
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+
+    .option-card__check {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #ffffff;
+    }
+
+    .option-card__name {
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+  }
+
+  &__check {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+    color: transparent;
+  }
+
+  &__name {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+}
+
+.back-btn,
+.generate-btn {
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.back-btn {
+  min-width: 140px;
+  background: #f1f5f9;
+  color: #334155;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+}
+
+.generate-btn {
+  min-width: 190px;
+  background: #2563eb;
+  color: #ffffff;
+
+  &:hover {
+    background: #1d4ed8;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 1024px) {
+  .trip-personalization {
+    border-radius: 18px;
+
+    &__body {
+      padding: 28px 22px;
+    }
+  }
+
+  .option-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .trip-personalization {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+
+    &__body {
+      padding: 22px 16px;
+    }
+
+    &__header {
+      margin-bottom: 24px;
+
+      h2 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 13px;
+      }
+    }
+
+    &__content {
+      gap: 22px;
+    }
+
+    &__footer {
+      flex-direction: column-reverse;
+      align-items: stretch;
+      margin-top: 26px;
+    }
+  }
+
+  .trip-step {
+    justify-content: flex-start;
+    overflow-x: auto;
+
+    &__line {
+      width: 60px;
+      min-width: 60px;
+    }
+
+    &__item {
+      p {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .personal-section {
+    padding: 18px;
+
+    &__header {
+      h3 {
+        font-size: 16px;
+      }
+
+      p {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .option-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .back-btn,
+  .generate-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-step {
+    &__line {
+      display: none;
+    }
+  }
+
+  .trip-personalization {
+    &__body {
+      padding: 18px 12px;
+    }
+  }
+
+  .personal-section {
+    padding: 16px;
+
+    &__icon {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .option-card {
+    min-height: 46px;
+
+    &__name {
+      font-size: 13px;
+    }
+  }
+
+  .back-btn,
+  .generate-btn {
+    height: 46px;
+    font-size: 13px;
+  }
+}
