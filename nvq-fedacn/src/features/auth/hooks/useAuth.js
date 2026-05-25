@@ -6,11 +6,13 @@ import {
   registerApi,
   forgotPasswordApi,
   resetPasswordApi,
+  getMeApi,
 } from "../services/authService";
 
 import {
   saveAuthTokens,
   clearAuthTokens,
+  saveCurrentUser
 } from "../store/authStore";
 
 export function useAuth() {
@@ -28,9 +30,20 @@ export function useAuth() {
 
       saveAuthTokens(result);
 
-      navigate("/trips/create");
+      const user = await getMeApi();
+
+      // saveCurrentUser(user);
+      
+      if (user.quyen === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/trips/create");
+      }
+
+      return true;
     } catch (err) {
       setError(err.message);
+      return false;
     } finally {
       setLoading(false);
     }
