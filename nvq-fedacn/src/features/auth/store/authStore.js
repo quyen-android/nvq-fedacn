@@ -3,6 +3,14 @@ export function saveAuthTokens(data) {
   localStorage.setItem("refresh_token", data.refresh_token);
 }
 
+export function saveCurrentUser(user) {
+  localStorage.setItem("user", JSON.stringify(user));
+}
+
+export function getCurrentUser() {
+  return JSON.parse(localStorage.getItem("user"));
+}
+
 export function getAccessToken() {
   return localStorage.getItem("access_token");
 }
@@ -14,4 +22,5 @@ export function getRefreshToken() {
 export function clearAuthTokens() {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user");
 }
