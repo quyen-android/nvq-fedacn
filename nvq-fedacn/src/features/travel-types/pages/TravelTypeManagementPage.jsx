@@ -11,12 +11,11 @@ import {
   Pencil,
   Trash2,
   ArrowUpDown,
+  Search,
 } from "lucide-react";
 
 import { useTravelTypes } from "../hooks/useTravelTypes";
-
 import TravelTypeForm from "../components/TravelTypeForm";
-
 import DashboardLayout from "../../../components/layout/DashboardLayout";
 
 import "./TravelTypeManagementPage.scss";
@@ -24,6 +23,9 @@ import "./TravelTypeManagementPage.scss";
 export default function TravelTypeManagementPage() {
   const formRef = useRef(null);
   const errorRef = useRef(null);
+
+  const [keyword, setKeyword] =
+    useState("");
 
   const [sortOrder, setSortOrder] =
     useState("asc");
@@ -57,24 +59,34 @@ export default function TravelTypeManagementPage() {
     );
   }
 
-  const sortedTravelTypes =
-    useMemo(() => {
-      const sorted = [...travelTypes];
+  const filteredTravelTypes = useMemo(() => {
+    const searchValue =
+      keyword.trim().toLowerCase();
 
-      sorted.sort((a, b) => {
-        return sortOrder === "asc"
-          ? a.ten_loai.localeCompare(
-              b.ten_loai,
-              "vi"
-            )
-          : b.ten_loai.localeCompare(
-              a.ten_loai,
-              "vi"
-            );
-      });
+    let result = [...travelTypes];
 
-      return sorted;
-    }, [travelTypes, sortOrder]);
+    if (searchValue) {
+      result = result.filter((item) =>
+        item.ten_loai
+          ?.toLowerCase()
+          .includes(searchValue)
+      );
+    }
+
+    result.sort((a, b) => {
+      return sortOrder === "asc"
+        ? a.ten_loai.localeCompare(
+            b.ten_loai,
+            "vi"
+          )
+        : b.ten_loai.localeCompare(
+            a.ten_loai,
+            "vi"
+          );
+    });
+
+    return result;
+  }, [travelTypes, keyword, sortOrder]);
 
   useEffect(() => {
     if (error) {
@@ -90,14 +102,11 @@ export default function TravelTypeManagementPage() {
       <div className="travel-type-page">
         <div className="page-header">
           <div>
-            <h1>
-              Quản lý loại du lịch
-            </h1>
+            <h1>Quản lý loại du lịch</h1>
 
             <p>
-              Thêm, sửa, xóa các loại
-              hình du lịch trong hệ
-              thống.
+              Thêm, sửa, xóa các loại hình du lịch
+              trong hệ thống.
             </p>
           </div>
 
@@ -106,11 +115,23 @@ export default function TravelTypeManagementPage() {
           </div>
         </div>
 
+        <div ref={errorRef}>
+          {error && (
+            <div className="error-box">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="success-box">
+              {success}
+            </div>
+          )}
+        </div>
+
         <div ref={formRef}>
           <TravelTypeForm
-            editingTravelType={
-              editingTravelType
-            }
+            editingTravelType={editingTravelType}
             onCreate={handleCreate}
             onUpdate={handleUpdate}
             onCancel={() =>
@@ -122,16 +143,26 @@ export default function TravelTypeManagementPage() {
         <div className="table-card">
           <div className="table-header">
             <div>
-              <h2>
-                Danh sách loại du lịch
-              </h2>
+              <h2>Danh sách loại du lịch</h2>
 
               <p>
-                Tổng{" "}
-                {
-                  travelTypes.length
-                } loại du lịch
+                Tổng {filteredTravelTypes.length} loại du lịch
               </p>
+            </div>
+          </div>
+
+          <div className="table-toolbar">
+            <div className="table-search">
+              <Search size={18} />
+
+              <input
+                type="text"
+                placeholder="Tìm kiếm loại du lịch..."
+                value={keyword}
+                onChange={(e) =>
+                  setKeyword(e.target.value)
+                }
+              />
             </div>
           </div>
 
@@ -142,101 +173,77 @@ export default function TravelTypeManagementPage() {
                 className="spin"
               />
 
-              <span>
-                Đang tải dữ liệu...
-              </span>
+              <span>Đang tải dữ liệu...</span>
             </div>
           ) : (
             <div className="table-wrapper">
               <table className="travel-type-table">
                 <thead>
-                    <tr>
-                        <th>
-                        <button
-                            className="tag-table__sort"
-                            onClick={() =>
-                            handleSort("tag")
-                            }
-                        >
-                            Tên loại du lịch
+                  <tr>
+                    <th>
+                      <button
+                        type="button"
+                        className="travel-type-table__sort"
+                        onClick={handleSort}
+                      >
+                        <span>
+                          Tên loại du lịch
+                        </span>
 
-                            <ArrowUpDown
-                            size={15}
-                            />
-                        </button>
-                        </th>
+                        <ArrowUpDown size={15} />
+                      </button>
+                    </th>
 
-                        <th>Hành động</th>
-                    </tr>
-                
+                    <th>Hành động</th>
+                  </tr>
                 </thead>
 
                 <tbody>
-                  {sortedTravelTypes.length ===
-                  0 ? (
+                  {filteredTravelTypes.length === 0 ? (
                     <tr>
                       <td
                         colSpan="2"
                         className="empty-text"
                       >
-                        Chưa có loại du
-                        lịch nào
+                        Không có dữ liệu
                       </td>
                     </tr>
                   ) : (
-                    sortedTravelTypes.map(
-                      (item) => (
-                        <tr
-                          key={
-                            item.ma_loai_du_lich
-                          }
-                        >
-                          <td>
-                            {
-                              item.ten_loai
-                            }
-                          </td>
+                    filteredTravelTypes.map((item) => (
+                      <tr
+                        key={
+                          item.ma_loai_du_lich
+                        }
+                      >
+                        <td>{item.ten_loai}</td>
 
-                          <td>
-                            <div className="action-buttons">
-                              <button
-                                className="btn-edit"
-                                onClick={() =>
-                                  handleEdit(
-                                    item
-                                  )
-                                }
-                              >
-                                <Pencil
-                                  size={
-                                    15
-                                  }
-                                />
+                        <td>
+                          <div className="action-buttons">
+                            <button
+                              className="btn-edit"
+                              onClick={() =>
+                                handleEdit(item)
+                              }
+                            >
+                              <Pencil size={15} />
+                              Sửa
+                            </button>
 
-                                Sửa
-                              </button>
-
-                              <button
-                                className="btn-delete"
-                                onClick={() =>
-                                  handleDelete(
-                                    item.ma_loai_du_lich
-                                  )
-                                }
-                              >
-                                <Trash2
-                                  size={
-                                    15
-                                  }
-                                />
-
-                                Xóa
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    )
+                            <button
+                              className="btn-delete"
+                              onClick={() =>
+                                handleDelete(
+                                  item.ma_loai_du_lich
+                                )
+                              }
+                            >
+                              <Trash2 size={15} />
+                              Xóa
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>

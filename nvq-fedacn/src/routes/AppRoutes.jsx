@@ -14,6 +14,7 @@ import AdminOverviewPage from "../features/admin/pages/AdminOverviewPage";
 import TagManagementPage from "../features/tags/pages/TagManagementPage";
 import PlaceTypeManagementPage from "../features/place-types/pages/PlaceTypeManagementPage";
 import TravelTypeManagementPage from "../features/travel-types/pages/TravelTypeManagementPage";
+import FoodPreferenceManagementPage from "../features/food-preferences/pages/FoodPreferenceManagementPage";
 
 export default function AppRoutes() {
   return (
@@ -37,9 +38,11 @@ export default function AppRoutes() {
 
       <Route path="/admin/tags" element={<TagManagementPage />} />
 
-      <Route path="/admin/place-types"element={<PlaceTypeManagementPage />}/>
+      <Route path="/admin/place-types" element={<PlaceTypeManagementPage />}/>
       
-      <Route path="/admin/travel-types"element={<TravelTypeManagementPage />}/>
+      <Route path="/admin/travel-types" element={<TravelTypeManagementPage />}/>
+
+      <Route path="/admin/food-preferences" element={<FoodPreferenceManagementPage />}/>
       
     </Routes>);
 }
