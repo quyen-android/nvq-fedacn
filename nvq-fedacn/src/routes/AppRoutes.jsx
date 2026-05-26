@@ -12,6 +12,7 @@ import MyItineraryPage from "../features/itineraries/pages/MyItineraryPage";
 import EditItineraryPage from "../features/itineraries/pages/EditItineraryPage";
 import AdminOverviewPage from "../features/admin/pages/AdminOverviewPage";
 import TagManagementPage from "../features/tags/pages/TagManagementPage";
+import PlaceTypeManagementPage from "../features/place-types/pages/PlaceTypeManagementPage";
 
 export default function AppRoutes() {
   return (
@@ -32,8 +33,10 @@ export default function AppRoutes() {
       <Route path="/itineraries/:maChuyenDi/edit" element={<EditItineraryPage />} />
       
       <Route path="/admin" element={<AdminOverviewPage />}/>
-      
+
       <Route path="/admin/tags" element={<TagManagementPage />} />
-    </Routes>
-  );
+
+      <Route path="/admin/place-types"element={<PlaceTypeManagementPage />}/>
+      
+    </Routes>);
 }

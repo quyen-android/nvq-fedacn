@@ -4,17 +4,6 @@ function getToken() {
   return localStorage.getItem("access_token");
 }
 
-export async function getTags() {
-  const res = await fetch(`${API_URL}/the`);
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.detail || "Lấy danh sách thẻ thất bại");
-  }
-
-  return data;
-}
-
 export async function getPlaceTypes() {
   const res = await fetch(`${API_URL}/loai-dia-diem`);
   const data = await res.json();
@@ -26,8 +15,8 @@ export async function getPlaceTypes() {
   return data;
 }
 
-export async function createTag(payload) {
-  const res = await fetch(`${API_URL}/the`, {
+export async function createPlaceType(payload) {
+  const res = await fetch(`${API_URL}/loai-dia-diem`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,14 +28,14 @@ export async function createTag(payload) {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.detail || "Thêm thẻ thất bại");
+    throw new Error(data.detail || "Thêm loại địa điểm thất bại");
   }
 
   return data;
 }
 
-export async function updateTag(maThe, payload) {
-  const res = await fetch(`${API_URL}/the/${maThe}`, {
+export async function updatePlaceType(maLoai, payload) {
+  const res = await fetch(`${API_URL}/loai-dia-diem/${maLoai}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -58,14 +47,14 @@ export async function updateTag(maThe, payload) {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.detail || "Cập nhật thẻ thất bại");
+    throw new Error(data.detail || "Cập nhật loại địa điểm thất bại");
   }
 
   return data;
 }
 
-export async function deleteTag(maThe) {
-  const res = await fetch(`${API_URL}/the/${maThe}`, {
+export async function deletePlaceType(maLoai) {
+  const res = await fetch(`${API_URL}/loai-dia-diem/${maLoai}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${getToken()}`,
@@ -75,7 +64,7 @@ export async function deleteTag(maThe) {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.detail || "Xóa thẻ thất bại");
+    throw new Error(data.detail || "Xóa loại địa điểm thất bại");
   }
 
   return data;
