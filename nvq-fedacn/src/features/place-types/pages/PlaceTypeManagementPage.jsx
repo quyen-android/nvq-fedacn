@@ -1,46 +1,45 @@
 import {
   Edit,
   Trash2,
-  Tags,
+  MapPinned,
   Loader2,
   ArrowUpDown,
 } from "lucide-react";
 
 import {
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 
-import { useTags } from "../hooks/useTags";
-import TagForm from "../components/TagForm";
+import { usePlaceTypes } from "../hooks/usePlaceTypes";
+import PlaceTypeForm from "../components/PlaceTypeForm";
+
 import DashboardLayout from "../../../components/layout/DashboardLayout";
 
-import "./TagManagementPage.scss";
+import "./PlaceTypeManagementPage.scss";
 
-export default function TagManagementPage() {
+export default function PlaceTypeManagementPage() {
   const {
-    tags,
     placeTypes,
-    editingTag,
-    setEditingTag,
+    editingPlaceType,
+    setEditingPlaceType,
     loading,
     error,
     handleCreate,
     handleUpdate,
     handleDelete,
-  } = useTags();
+  } = usePlaceTypes();
 
   const formRef = useRef(null);
-
-  const [sortBy, setSortBy] =
-    useState("tag");
+  const errorRef = useRef(null);
 
   const [sortOrder, setSortOrder] =
     useState("asc");
 
-  const handleEditClick = (tag) => {
-    setEditingTag(tag);
+  const handleEditClick = (item) => {
+    setEditingPlaceType(item);
 
     setTimeout(() => {
       formRef.current?.scrollIntoView({
@@ -50,94 +49,100 @@ export default function TagManagementPage() {
     }, 100);
   };
 
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder((prev) =>
-        prev === "asc" ? "desc" : "asc"
-      );
-    } else {
-      setSortBy(field);
-      setSortOrder("asc");
-    }
+  const handleSort = () => {
+    setSortOrder((prev) =>
+      prev === "asc" ? "desc" : "asc"
+    );
   };
 
-  const sortedTags = useMemo(() => {
-    const sorted = [...tags];
+  const sortedPlaceTypes =
+    useMemo(() => {
+      const sorted = [...placeTypes];
 
-    sorted.sort((a, b) => {
-      const valueA =
-        sortBy === "tag"
-          ? a.ten_the
-          : a.ten_loai || "";
+      sorted.sort((a, b) => {
+        return sortOrder === "asc"
+          ? a.ten_loai.localeCompare(
+              b.ten_loai,
+              "vi"
+            )
+          : b.ten_loai.localeCompare(
+              a.ten_loai,
+              "vi"
+            );
+      });
 
-      const valueB =
-        sortBy === "tag"
-          ? b.ten_the
-          : b.ten_loai || "";
+      return sorted;
+    }, [placeTypes, sortOrder]);
 
-      return sortOrder === "asc"
-        ? valueA.localeCompare(
-            valueB,
-            "vi"
-          )
-        : valueB.localeCompare(
-            valueA,
-            "vi"
-          );
-    });
-
-    return sorted;
-  }, [tags, sortBy, sortOrder]);
+  useEffect(() => {
+    if (error) {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [error]);
 
   return (
     <DashboardLayout>
-      <div className="tag-page">
-        <div className="tag-page__header">
+      <div className="place-type-page">
+        <div className="place-type-page__header">
           <div>
-            <h1>Quản lý thẻ</h1>
+            <h1>
+              Quản lý loại địa điểm
+            </h1>
 
             <p>
-              Quản lý các thẻ dùng để
-              phân loại và lọc địa điểm
+              Quản lý các danh mục loại
+              địa điểm trong hệ thống
             </p>
           </div>
 
-          <div className="tag-page__icon">
-            <Tags size={26} />
+          <div className="place-type-page__icon">
+            <MapPinned size={26} />
           </div>
         </div>
 
         {error && (
-          <div className="tag-page__error">
+          <div
+            ref={errorRef}
+            className="place-type-page__error"
+          >
             {error}
           </div>
         )}
 
         <div ref={formRef}>
-          <TagForm
-            placeTypes={placeTypes}
-            editingTag={editingTag}
+          <PlaceTypeForm
+            editingPlaceType={
+              editingPlaceType
+            }
             onCreate={handleCreate}
             onUpdate={handleUpdate}
             onCancel={() =>
-              setEditingTag(null)
+              setEditingPlaceType(null)
             }
           />
         </div>
 
-        <section className="tag-table-card">
-          <div className="tag-table-card__header">
+        <section className="place-type-table-card">
+          <div className="place-type-table-card__header">
             <div>
-              <h2>Danh sách thẻ</h2>
+              <h2>
+                Danh sách loại địa điểm
+              </h2>
 
               <p>
-                Tổng {tags.length} thẻ
+                Tổng{" "}
+                {
+                  placeTypes.length
+                } loại địa điểm
               </p>
             </div>
           </div>
 
           {loading ? (
-            <div className="tag-page__loading">
+            <div className="place-type-page__loading">
               <Loader2
                 size={24}
                 className="spin"
@@ -148,33 +153,18 @@ export default function TagManagementPage() {
               </span>
             </div>
           ) : (
-            <div className="tag-table-wrapper">
-              <table className="tag-table">
+            <div className="place-type-table-wrapper">
+              <table className="place-type-table">
                 <thead>
                   <tr>
                     <th>
                       <button
-                        className="tag-table__sort"
-                        onClick={() =>
-                          handleSort("tag")
+                        className="place-type-table__sort"
+                        onClick={
+                          handleSort
                         }
                       >
-                        Tên thẻ
-
-                        <ArrowUpDown
-                          size={15}
-                        />
-                      </button>
-                    </th>
-
-                    <th>
-                      <button
-                        className="tag-table__sort"
-                        onClick={() =>
-                          handleSort("type")
-                        }
-                      >
-                        Loại địa điểm
+                        Tên loại địa điểm
 
                         <ArrowUpDown
                           size={15}
@@ -189,44 +179,40 @@ export default function TagManagementPage() {
                 </thead>
 
                 <tbody>
-                  {sortedTags.length ===
+                  {sortedPlaceTypes.length ===
                   0 ? (
                     <tr>
                       <td
-                        colSpan="3"
-                        className="tag-table__empty"
+                        colSpan="2"
+                        className="place-type-table__empty"
                       >
-                        Chưa có thẻ nào
+                        Chưa có loại địa
+                        điểm nào
                       </td>
                     </tr>
                   ) : (
-                    sortedTags.map(
-                      (tag) => (
+                    sortedPlaceTypes.map(
+                      (item) => (
                         <tr
-                          key={tag.ma_the}
+                          key={
+                            item.ma_loai
+                          }
                         >
                           <td>
-                            <span className="tag-table__name">
+                            <span className="place-type-table__name">
                               {
-                                tag.ten_the
+                                item.ten_loai
                               }
                             </span>
                           </td>
 
                           <td>
-                            <span className="tag-table__type">
-                              {tag.ten_loai ||
-                                "Chưa phân loại"}
-                            </span>
-                          </td>
-
-                          <td>
-                            <div className="tag-table__actions">
+                            <div className="place-type-table__actions">
                               <button
-                                className="tag-table__btn tag-table__btn--edit"
+                                className="place-type-table__btn place-type-table__btn--edit"
                                 onClick={() =>
                                   handleEditClick(
-                                    tag
+                                    item
                                   )
                                 }
                               >
@@ -240,10 +226,10 @@ export default function TagManagementPage() {
                               </button>
 
                               <button
-                                className="tag-table__btn tag-table__btn--delete"
+                                className="place-type-table__btn place-type-table__btn--delete"
                                 onClick={() =>
                                   handleDelete(
-                                    tag.ma_the
+                                    item.ma_loai
                                   )
                                 }
                               >

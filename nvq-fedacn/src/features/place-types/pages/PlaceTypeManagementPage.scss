@@ -1,4 +1,4 @@
-.tag-page {
+.place-type-page {
   &__header {
     display: flex;
     align-items: center;
@@ -52,7 +52,7 @@
   }
 }
 
-.tag-table-card {
+.place-type-table-card {
   margin-top: 24px;
   background: #fff;
   border: 1px solid #edf1f7;
@@ -79,14 +79,14 @@
   }
 }
 
-.tag-table-wrapper {
+.place-type-table-wrapper {
   width: 100%;
   overflow-x: auto;
 }
 
-.tag-table {
+.place-type-table {
   width: 100%;
-  min-width: 680px;
+  min-width: 620px;
   border-collapse: collapse;
   table-layout: fixed;
 
@@ -111,17 +111,12 @@
 
   th:nth-child(1),
   td:nth-child(1) {
-    width: 40%;
+    width: 60%;
   }
 
   th:nth-child(2),
   td:nth-child(2) {
-    width: 30%;
-  }
-
-  th:nth-child(3),
-  td:nth-child(3) {
-    width: 30%;
+    width: 40%;
     text-align: center;
   }
 
@@ -153,17 +148,6 @@
   &__name {
     font-weight: 700;
     color: #10203f;
-  }
-
-  &__type {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #eef4ff;
-    color: #2563eb;
-    font-weight: 700;
-    font-size: 13px;
   }
 
   &__actions {
@@ -228,7 +212,7 @@
 }
 
 @media (max-width: 768px) {
-  .tag-page {
+  .place-type-page {
     &__header {
       align-items: flex-start;
       gap: 14px;
@@ -239,18 +223,18 @@
     }
   }
 
-  .tag-table-card {
+  .place-type-table-card {
     padding: 18px;
     border-radius: 20px;
   }
 
-  .tag-table {
-    min-width: 620px;
+  .place-type-table {
+    min-width: 560px;
   }
 }
 
 @media (max-width: 480px) {
-  .tag-page {
+  .place-type-page {
     &__header {
       h1 {
         font-size: 23px;
@@ -266,7 +250,7 @@
     }
   }
 
-  .tag-table-card {
+  .place-type-table-card {
     padding: 14px;
   }
 }

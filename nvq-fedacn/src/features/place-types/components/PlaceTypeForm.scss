@@ -1,0 +1,149 @@
+.place-type-form {
+  background: #fff;
+  border: 1px solid #edf1f7;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 18px 45px
+    rgba(15, 23, 42, 0.06);
+  margin-bottom: 24px;
+
+  &__header {
+    margin-bottom: 24px;
+  &__error {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    font-size: 14px;
+    font-weight: 600;
+  }
+    h2 {
+      margin: 0;
+      color: #10203f;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    p {
+      margin: 6px 0 0;
+      color: #8a96ad;
+      font-size: 14px;
+    }
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 22px;
+
+    label {
+      color: #334155;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input {
+      height: 52px;
+      border: 1px solid #dbe4f0;
+      border-radius: 14px;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #10203f;
+      outline: none;
+      transition: 0.2s ease;
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+
+      &:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px
+          rgba(37, 99, 235, 0.12);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    button {
+      height: 44px;
+      border: none;
+      border-radius: 14px;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    button[type="submit"] {
+      background: #2563eb;
+      color: #fff;
+
+      &:hover {
+        background: #1d4ed8;
+      }
+    }
+  }
+
+  &__cancel {
+    background: #f1f5f9;
+    color: #475569;
+
+    &:hover {
+      background: #e2e8f0;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .place-type-form {
+    padding: 22px;
+    border-radius: 20px;
+
+    &__header {
+      h2 {
+        font-size: 21px;
+      }
+    }
+
+    &__group {
+      input {
+        height: 48px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .place-type-form {
+    padding: 18px;
+
+    &__header {
+      h2 {
+        font-size: 19px;
+      }
+
+      p {
+        font-size: 13px;
+      }
+    }
+
+    &__actions {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+  
+}
