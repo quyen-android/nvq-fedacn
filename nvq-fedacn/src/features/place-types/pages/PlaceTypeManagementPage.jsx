@@ -4,6 +4,7 @@ import {
   MapPinned,
   Loader2,
   ArrowUpDown,
+  Search,
 } from "lucide-react";
 
 import {
@@ -13,9 +14,7 @@ import {
 } from "react";
 
 import { usePlaceTypes } from "../hooks/usePlaceTypes";
-
 import PlaceTypeForm from "../components/PlaceTypeForm";
-
 import DashboardLayout from "../../../components/layout/DashboardLayout";
 
 import "./PlaceTypeManagementPage.scss";
@@ -32,6 +31,9 @@ export default function PlaceTypeManagementPage() {
   } = usePlaceTypes();
 
   const formRef = useRef(null);
+
+  const [keyword, setKeyword] =
+    useState("");
 
   const [sortOrder, setSortOrder] =
     useState("asc");
@@ -53,24 +55,34 @@ export default function PlaceTypeManagementPage() {
     );
   }
 
-  const sortedPlaceTypes =
-    useMemo(() => {
-      const sorted = [...placeTypes];
+  const filteredPlaceTypes = useMemo(() => {
+    const searchValue =
+      keyword.trim().toLowerCase();
 
-      sorted.sort((a, b) => {
-        return sortOrder === "asc"
-          ? a.ten_loai.localeCompare(
-              b.ten_loai,
-              "vi"
-            )
-          : b.ten_loai.localeCompare(
-              a.ten_loai,
-              "vi"
-            );
-      });
+    let result = [...placeTypes];
 
-      return sorted;
-    }, [placeTypes, sortOrder]);
+    if (searchValue) {
+      result = result.filter((item) =>
+        item.ten_loai
+          ?.toLowerCase()
+          .includes(searchValue)
+      );
+    }
+
+    result.sort((a, b) => {
+      return sortOrder === "asc"
+        ? a.ten_loai.localeCompare(
+            b.ten_loai,
+            "vi"
+          )
+        : b.ten_loai.localeCompare(
+            a.ten_loai,
+            "vi"
+          );
+    });
+
+    return result;
+  }, [placeTypes, keyword, sortOrder]);
 
   return (
     <DashboardLayout>
@@ -82,8 +94,8 @@ export default function PlaceTypeManagementPage() {
             </h1>
 
             <p>
-              Quản lý các danh mục loại
-              địa điểm trong hệ thống
+              Quản lý các danh mục loại địa
+              điểm trong hệ thống
             </p>
           </div>
 
@@ -94,9 +106,7 @@ export default function PlaceTypeManagementPage() {
 
         <div ref={formRef}>
           <PlaceTypeForm
-            editingPlaceType={
-              editingPlaceType
-            }
+            editingPlaceType={editingPlaceType}
             onCreate={handleCreate}
             onUpdate={handleUpdate}
             onCancel={() =>
@@ -113,11 +123,24 @@ export default function PlaceTypeManagementPage() {
               </h2>
 
               <p>
-                Tổng{" "}
-                {
-                  placeTypes.length
-                } loại địa điểm
+                Tổng {filteredPlaceTypes.length} loại
+                địa điểm
               </p>
+            </div>
+          </div>
+
+          <div className="place-type-table-card__toolbar">
+            <div className="place-type-table-card__search">
+              <Search size={18} />
+
+              <input
+                type="text"
+                placeholder="Tìm kiếm loại địa điểm..."
+                value={keyword}
+                onChange={(e) =>
+                  setKeyword(e.target.value)
+                }
+              />
             </div>
           </div>
 
@@ -139,16 +162,15 @@ export default function PlaceTypeManagementPage() {
                   <tr>
                     <th>
                       <button
-                        className="tag-table__sort"
-                        onClick={() =>
-                          handleSort("tag")
-                        }
+                        type="button"
+                        className="place-type-table__sort-title"
+                        onClick={handleSort}
                       >
-                        Tên loại địa điểm
+                        <span>
+                          Tên loại địa điểm
+                        </span>
 
-                        <ArrowUpDown
-                          size={15}
-                        />
+                        <ArrowUpDown size={15} />
                       </button>
                     </th>
 
@@ -159,73 +181,51 @@ export default function PlaceTypeManagementPage() {
                 </thead>
 
                 <tbody>
-                  {sortedPlaceTypes.length ===
-                  0 ? (
+                  {filteredPlaceTypes.length === 0 ? (
                     <tr>
                       <td
                         colSpan="2"
                         className="place-type-table__empty"
                       >
-                        Chưa có loại địa
-                        điểm nào
+                        Không có dữ liệu
                       </td>
                     </tr>
                   ) : (
-                    sortedPlaceTypes.map(
-                      (item) => (
-                        <tr
-                          key={
-                            item.ma_loai
-                          }
-                        >
-                          <td>
-                            <span className="place-type-table__name">
-                              {
-                                item.ten_loai
+                    filteredPlaceTypes.map((item) => (
+                      <tr key={item.ma_loai}>
+                        <td>
+                          <span className="place-type-table__name">
+                            {item.ten_loai}
+                          </span>
+                        </td>
+
+                        <td>
+                          <div className="place-type-table__actions">
+                            <button
+                              className="place-type-table__btn place-type-table__btn--edit"
+                              onClick={() =>
+                                handleEditClick(item)
                               }
-                            </span>
-                          </td>
+                            >
+                              <Edit size={16} />
+                              Sửa
+                            </button>
 
-                          <td>
-                            <div className="place-type-table__actions">
-                              <button
-                                className="place-type-table__btn place-type-table__btn--edit"
-                                onClick={() =>
-                                  handleEditClick(
-                                    item
-                                  )
-                                }
-                              >
-                                <Edit
-                                  size={
-                                    16
-                                  }
-                                />
-
-                                Sửa
-                              </button>
-
-                              <button
-                                className="place-type-table__btn place-type-table__btn--delete"
-                                onClick={() =>
-                                  handleDelete(
-                                    item.ma_loai
-                                  )
-                                }
-                              >
-                                <Trash2
-                                  size={
-                                    16
-                                  }
-                                />
-
-                                Xóa
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    )
+                            <button
+                              className="place-type-table__btn place-type-table__btn--delete"
+                              onClick={() =>
+                                handleDelete(
+                                  item.ma_loai
+                                )
+                              }
+                            >
+                              <Trash2 size={16} />
+                              Xóa
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>

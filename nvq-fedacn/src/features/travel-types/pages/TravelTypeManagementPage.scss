@@ -29,6 +29,7 @@
     border-radius: 18px;
     background: #eef4ff;
     color: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -62,7 +63,8 @@
     border: 1px solid #edf1f7;
     border-radius: 24px;
     padding: 24px;
-    box-shadow: 0 18px 45px
+    box-shadow:
+      0 18px 45px
       rgba(15, 23, 42, 0.06);
   }
 
@@ -83,12 +85,66 @@
     }
   }
 
+  .table-toolbar {
+    margin-bottom: 18px;
+  }
+
+  .table-search {
+    max-width: 420px;
+    height: 48px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+
+    background: #f8fafc;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 0 14px;
+
+    color: #94a3b8;
+
+    transition: all 0.2s ease;
+
+    &:focus-within {
+      border-color: #2563eb;
+      background: #fff;
+
+      box-shadow:
+        0 0 0 4px
+        rgba(37, 99, 235, 0.1);
+
+      svg {
+        color: #2563eb;
+      }
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+
+      color: #10203f;
+      font-size: 14px;
+      font-weight: 600;
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+  }
+
   .loading-box {
     min-height: 160px;
+
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+
     color: #64748b;
     font-weight: 600;
   }
@@ -113,7 +169,7 @@
 
     th {
       background: #f8fafc;
-      color: #8a96ad;
+      color: #475569;
       font-size: 14px;
       font-weight: 800;
       text-align: left;
@@ -144,26 +200,36 @@
       }
     }
 
-    .th-content {
+    &__sort {
+
+      border: none;
+      background: transparent;
+      padding: 0;
+
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
-    }
 
-    &__sort {
-        border: none;
-        background: transparent;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 0;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 800;
+      cursor: pointer;
 
-        &:hover {
+      color: #475569;
+      font-size: 14px;
+      font-weight: 800;
+
+      svg {
+        flex-shrink: 0;
+        color: #94a3b8;
+        transition: 0.2s ease;
+      }
+
+      &:hover {
         color: #2563eb;
+
+        svg {
+          color: #2563eb;
         }
+      }
     }
 
     .action-buttons {
@@ -179,11 +245,15 @@
       border: none;
       border-radius: 12px;
       padding: 0 14px;
-      font-size: 13px;
-      font-weight: 700;
+
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
+
+      font-size: 13px;
+      font-weight: 700;
+
       cursor: pointer;
       transition: all 0.2s ease;
 
@@ -244,6 +314,10 @@
     .table-card {
       padding: 18px;
       border-radius: 20px;
+    }
+
+    .table-search {
+      max-width: 100%;
     }
 
     .travel-type-table {

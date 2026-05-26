@@ -4,6 +4,7 @@ import {
   Tags,
   Loader2,
   ArrowUpDown,
+  Search,
 } from "lucide-react";
 
 import {
@@ -33,6 +34,9 @@ export default function TagManagementPage() {
 
   const formRef = useRef(null);
 
+  const [keyword, setKeyword] =
+    useState("");
+
   const [sortBy, setSortBy] =
     useState("tag");
 
@@ -61,18 +65,36 @@ export default function TagManagementPage() {
     }
   };
 
-  const sortedTags = useMemo(() => {
-    const sorted = [...tags];
+  const filteredTags = useMemo(() => {
+    const searchValue =
+      keyword.trim().toLowerCase();
 
-    sorted.sort((a, b) => {
+    let result = [...tags];
+
+    if (searchValue) {
+      result = result.filter((tag) => {
+        const tagName =
+          tag.ten_the?.toLowerCase() || "";
+
+        const typeName =
+          tag.ten_loai?.toLowerCase() || "";
+
+        return (
+          tagName.includes(searchValue) ||
+          typeName.includes(searchValue)
+        );
+      });
+    }
+
+    result.sort((a, b) => {
       const valueA =
         sortBy === "tag"
-          ? a.ten_the
+          ? a.ten_the || ""
           : a.ten_loai || "";
 
       const valueB =
         sortBy === "tag"
-          ? b.ten_the
+          ? b.ten_the || ""
           : b.ten_loai || "";
 
       return sortOrder === "asc"
@@ -86,8 +108,8 @@ export default function TagManagementPage() {
           );
     });
 
-    return sorted;
-  }, [tags, sortBy, sortOrder]);
+    return result;
+  }, [tags, keyword, sortBy, sortOrder]);
 
   return (
     <DashboardLayout>
@@ -97,8 +119,8 @@ export default function TagManagementPage() {
             <h1>Quản lý thẻ</h1>
 
             <p>
-              Quản lý các thẻ dùng để
-              phân loại và lọc địa điểm
+              Quản lý các thẻ dùng để phân
+              loại và lọc địa điểm
             </p>
           </div>
 
@@ -131,8 +153,23 @@ export default function TagManagementPage() {
               <h2>Danh sách thẻ</h2>
 
               <p>
-                Tổng {tags.length} thẻ
+                Tổng {filteredTags.length} thẻ
               </p>
+            </div>
+          </div>
+
+          <div className="tag-table-card__toolbar">
+            <div className="tag-table-card__search">
+              <Search size={18} />
+
+              <input
+                type="text"
+                placeholder="Tìm kiếm tên thẻ hoặc loại địa điểm..."
+                value={keyword}
+                onChange={(e) =>
+                  setKeyword(e.target.value)
+                }
+              />
             </div>
           </div>
 
@@ -160,10 +197,7 @@ export default function TagManagementPage() {
                         }
                       >
                         Tên thẻ
-
-                        <ArrowUpDown
-                          size={15}
-                        />
+                        <ArrowUpDown size={15} />
                       </button>
                     </th>
 
@@ -175,91 +209,67 @@ export default function TagManagementPage() {
                         }
                       >
                         Loại địa điểm
-
-                        <ArrowUpDown
-                          size={15}
-                        />
+                        <ArrowUpDown size={15} />
                       </button>
                     </th>
 
-                    <th>
-                      Hành động
-                    </th>
+                    <th>Hành động</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {sortedTags.length ===
-                  0 ? (
+                  {filteredTags.length === 0 ? (
                     <tr>
                       <td
                         colSpan="3"
                         className="tag-table__empty"
                       >
-                        Chưa có thẻ nào
+                        Không có dữ liệu
                       </td>
                     </tr>
                   ) : (
-                    sortedTags.map(
-                      (tag) => (
-                        <tr
-                          key={tag.ma_the}
-                        >
-                          <td>
-                            <span className="tag-table__name">
-                              {
-                                tag.ten_the
+                    filteredTags.map((tag) => (
+                      <tr key={tag.ma_the}>
+                        <td>
+                          <span className="tag-table__name">
+                            {tag.ten_the}
+                          </span>
+                        </td>
+
+                        <td>
+                          <span className="tag-table__type">
+                            {tag.ten_loai ||
+                              "Chưa phân loại"}
+                          </span>
+                        </td>
+
+                        <td>
+                          <div className="tag-table__actions">
+                            <button
+                              className="tag-table__btn tag-table__btn--edit"
+                              onClick={() =>
+                                handleEditClick(tag)
                               }
-                            </span>
-                          </td>
+                            >
+                              <Edit size={16} />
+                              Sửa
+                            </button>
 
-                          <td>
-                            <span className="tag-table__type">
-                              {tag.ten_loai ||
-                                "Chưa phân loại"}
-                            </span>
-                          </td>
-
-                          <td>
-                            <div className="tag-table__actions">
-                              <button
-                                className="tag-table__btn tag-table__btn--edit"
-                                onClick={() =>
-                                  handleEditClick(
-                                    tag
-                                  )
-                                }
-                              >
-                                <Edit
-                                  size={
-                                    16
-                                  }
-                                />
-
-                                Sửa
-                              </button>
-
-                              <button
-                                className="tag-table__btn tag-table__btn--delete"
-                                onClick={() =>
-                                  handleDelete(
-                                    tag.ma_the
-                                  )
-                                }
-                              >
-                                <Trash2
-                                  size={
-                                    16
-                                  }
-                                />
-
-                                Xóa
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    )
+                            <button
+                              className="tag-table__btn tag-table__btn--delete"
+                              onClick={() =>
+                                handleDelete(
+                                  tag.ma_the
+                                )
+                              }
+                            >
+                              <Trash2 size={16} />
+                              Xóa
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>
