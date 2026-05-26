@@ -41,20 +41,27 @@ export default function PlaceTypeForm({
       return;
     }
 
-    setError("");
+    try {
+      setError("");
 
-    if (editingPlaceType) {
-      await onUpdate(
-        editingPlaceType.ma_loai,
-        formData
+      if (editingPlaceType) {
+        await onUpdate(
+          editingPlaceType.ma_loai,
+          formData
+        );
+      } else {
+        await onCreate(formData);
+      }
+
+      setFormData({
+        ten_loai: "",
+      });
+    } catch (err) {
+      setError(
+        err.message ||
+          "Có lỗi xảy ra"
       );
-    } else {
-      await onCreate(formData);
     }
-
-    setFormData({
-      ten_loai: "",
-    });
   };
 
   return (
@@ -75,12 +82,6 @@ export default function PlaceTypeForm({
         </p>
       </div>
 
-      {error && (
-        <div className="place-type-form__error">
-          {error}
-        </div>
-      )}
-
       <div className="place-type-form__group">
         <label>
           Tên loại địa điểm
@@ -88,12 +89,18 @@ export default function PlaceTypeForm({
 
         <input
           type="text"
+          className={
+            error
+              ? "input-error"
+              : ""
+          }
           placeholder="Ví dụ: Quán ăn, Khách sạn..."
           value={formData.ten_loai}
           onChange={(e) => {
             setFormData({
               ...formData,
-              ten_loai: e.target.value,
+              ten_loai:
+                e.target.value,
             });
 
             if (error) {
@@ -101,6 +108,12 @@ export default function PlaceTypeForm({
             }
           }}
         />
+
+        {error && (
+          <p className="place-type-form__field-error">
+            {error}
+          </p>
+        )}
       </div>
 
       <div className="place-type-form__actions">

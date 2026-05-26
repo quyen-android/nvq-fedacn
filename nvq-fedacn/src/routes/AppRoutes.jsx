@@ -13,6 +13,7 @@ import EditItineraryPage from "../features/itineraries/pages/EditItineraryPage";
 import AdminOverviewPage from "../features/admin/pages/AdminOverviewPage";
 import TagManagementPage from "../features/tags/pages/TagManagementPage";
 import PlaceTypeManagementPage from "../features/place-types/pages/PlaceTypeManagementPage";
+import TravelTypeManagementPage from "../features/travel-types/pages/TravelTypeManagementPage";
 
 export default function AppRoutes() {
   return (
@@ -37,6 +38,8 @@ export default function AppRoutes() {
       <Route path="/admin/tags" element={<TagManagementPage />} />
 
       <Route path="/admin/place-types"element={<PlaceTypeManagementPage />}/>
+      
+      <Route path="/admin/travel-types"element={<TravelTypeManagementPage />}/>
       
     </Routes>);
 }

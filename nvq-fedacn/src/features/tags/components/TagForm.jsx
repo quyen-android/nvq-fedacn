@@ -1,16 +1,24 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import {
   Tag,
   Layers,
   Save,
   X,
-  Sparkles,
   ChevronDown,
 } from "lucide-react";
 
 import "./TagForm.scss";
 
 const INITIAL_FORM = {
+  ten_the: "",
+  ma_loai: "",
+};
+
+const INITIAL_ERROR = {
   ten_the: "",
   ma_loai: "",
 };
@@ -22,33 +30,29 @@ export default function TagForm({
   onUpdate,
   onCancel,
 }) {
-    const [formData, setFormData] =
-        useState(INITIAL_FORM);
+  const [formData, setFormData] =
+    useState(INITIAL_FORM);
 
-    const [loading, setLoading] =
-        useState(false);
-    const [openSelect, setOpenSelect] =
-        useState(false);
+  const [error, setError] =
+    useState(INITIAL_ERROR);
 
-    const selectedPlaceType =
-    placeTypes.find(
-        (item) =>
-        item.ma_loai === formData.ma_loai
-    );
-    const [focusedSelect, setFocusedSelect] =
-        useState(false);
+  const [loading, setLoading] =
+    useState(false);
+
+  const [focusedSelect, setFocusedSelect] =
+    useState(false);
 
   useEffect(() => {
     if (editingTag) {
       setFormData({
-        ten_the:
-          editingTag.ten_the || "",
-        ma_loai:
-          editingTag.ma_loai || "",
+        ten_the: editingTag.ten_the || "",
+        ma_loai: editingTag.ma_loai || "",
       });
     } else {
       setFormData(INITIAL_FORM);
     }
+
+    setError(INITIAL_ERROR);
   }, [editingTag]);
 
   const updateField = (name, value) => {
@@ -56,22 +60,35 @@ export default function TagForm({
       ...prev,
       [name]: value,
     }));
+
+    setError((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const validateForm = () => {
+    const newError = {
+      ten_the: "",
+      ma_loai: "",
+    };
+
+    let isValid = true;
+
     if (!formData.ten_the.trim()) {
-      alert("Vui lòng nhập tên thẻ");
-      return false;
+      newError.ten_the =
+        "Vui lòng nhập tên thẻ";
+      isValid = false;
     }
 
     if (!formData.ma_loai) {
-      alert(
-        "Vui lòng chọn loại địa điểm"
-      );
-      return false;
+      newError.ma_loai =
+        "Vui lòng chọn loại địa điểm";
+      isValid = false;
     }
 
-    return true;
+    setError(newError);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
@@ -84,8 +101,7 @@ export default function TagForm({
 
       const payload = {
         ...formData,
-        ten_the:
-          formData.ten_the.trim(),
+        ten_the: formData.ten_the.trim(),
       };
 
       if (editingTag) {
@@ -97,12 +113,19 @@ export default function TagForm({
         await onCreate(payload);
         setFormData(INITIAL_FORM);
       }
-    } catch (error) {
-      console.error(error);
-      alert("Có lỗi xảy ra");
+
+      setError(INITIAL_ERROR);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancel = () => {
+    setFormData(INITIAL_FORM);
+    setError(INITIAL_ERROR);
+    onCancel();
   };
 
   return (
@@ -114,7 +137,6 @@ export default function TagForm({
 
       <div className="tag-form__header">
         <div>
-
           <h2>
             {editingTag
               ? "Cập nhật thẻ"
@@ -137,7 +159,13 @@ export default function TagForm({
         <div className="tag-form__group">
           <label>Tên thẻ</label>
 
-          <div className="tag-form__input-wrap">
+          <div
+            className={`tag-form__input-wrap ${
+              error.ten_the
+                ? "tag-form__input-wrap--error"
+                : ""
+            }`}
+          >
             <Tag size={18} />
 
             <input
@@ -152,6 +180,12 @@ export default function TagForm({
               }
             />
           </div>
+
+          {error.ten_the && (
+            <p className="tag-form__error">
+              {error.ten_the}
+            </p>
+          )}
         </div>
 
         <div className="tag-form__group">
@@ -161,6 +195,10 @@ export default function TagForm({
             className={`tag-form__input-wrap tag-form__input-wrap--select ${
               focusedSelect
                 ? "tag-form__input-wrap--active"
+                : ""
+            } ${
+              error.ma_loai
+                ? "tag-form__input-wrap--error"
                 : ""
             }`}
           >
@@ -204,6 +242,12 @@ export default function TagForm({
               }`}
             />
           </div>
+
+          {error.ma_loai && (
+            <p className="tag-form__error">
+              {error.ma_loai}
+            </p>
+          )}
         </div>
       </div>
 
@@ -212,7 +256,7 @@ export default function TagForm({
           <button
             type="button"
             className="tag-form__btn tag-form__btn--secondary"
-            onClick={onCancel}
+            onClick={handleCancel}
           >
             <X size={18} />
             Hủy

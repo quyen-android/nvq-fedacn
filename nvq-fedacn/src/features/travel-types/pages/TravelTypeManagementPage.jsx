@@ -1,43 +1,47 @@
 import {
-  Edit,
-  Trash2,
-  MapPinned,
-  Loader2,
-  ArrowUpDown,
-} from "lucide-react";
-
-import {
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 
-import { usePlaceTypes } from "../hooks/usePlaceTypes";
+import {
+  Loader2,
+  Map,
+  Pencil,
+  Trash2,
+  ArrowUpDown,
+} from "lucide-react";
 
-import PlaceTypeForm from "../components/PlaceTypeForm";
+import { useTravelTypes } from "../hooks/useTravelTypes";
+
+import TravelTypeForm from "../components/TravelTypeForm";
 
 import DashboardLayout from "../../../components/layout/DashboardLayout";
 
-import "./PlaceTypeManagementPage.scss";
+import "./TravelTypeManagementPage.scss";
 
-export default function PlaceTypeManagementPage() {
-  const {
-    placeTypes,
-    editingPlaceType,
-    setEditingPlaceType,
-    loading,
-    handleCreate,
-    handleUpdate,
-    handleDelete,
-  } = usePlaceTypes();
-
+export default function TravelTypeManagementPage() {
   const formRef = useRef(null);
+  const errorRef = useRef(null);
 
   const [sortOrder, setSortOrder] =
     useState("asc");
 
-  function handleEditClick(item) {
-    setEditingPlaceType(item);
+  const {
+    travelTypes,
+    editingTravelType,
+    setEditingTravelType,
+    loading,
+    error,
+    success,
+    handleCreate,
+    handleUpdate,
+    handleDelete,
+  } = useTravelTypes();
+
+  function handleEdit(item) {
+    setEditingTravelType(item);
 
     setTimeout(() => {
       formRef.current?.scrollIntoView({
@@ -53,9 +57,9 @@ export default function PlaceTypeManagementPage() {
     );
   }
 
-  const sortedPlaceTypes =
+  const sortedTravelTypes =
     useMemo(() => {
-      const sorted = [...placeTypes];
+      const sorted = [...travelTypes];
 
       sorted.sort((a, b) => {
         return sortOrder === "asc"
@@ -70,59 +74,69 @@ export default function PlaceTypeManagementPage() {
       });
 
       return sorted;
-    }, [placeTypes, sortOrder]);
+    }, [travelTypes, sortOrder]);
+
+  useEffect(() => {
+    if (error) {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [error]);
 
   return (
     <DashboardLayout>
-      <div className="place-type-page">
-        <div className="place-type-page__header">
+      <div className="travel-type-page">
+        <div className="page-header">
           <div>
             <h1>
-              Quản lý loại địa điểm
+              Quản lý loại du lịch
             </h1>
 
             <p>
-              Quản lý các danh mục loại
-              địa điểm trong hệ thống
+              Thêm, sửa, xóa các loại
+              hình du lịch trong hệ
+              thống.
             </p>
           </div>
 
-          <div className="place-type-page__icon">
-            <MapPinned size={26} />
+          <div className="page-icon">
+            <Map size={28} />
           </div>
         </div>
 
         <div ref={formRef}>
-          <PlaceTypeForm
-            editingPlaceType={
-              editingPlaceType
+          <TravelTypeForm
+            editingTravelType={
+              editingTravelType
             }
             onCreate={handleCreate}
             onUpdate={handleUpdate}
             onCancel={() =>
-              setEditingPlaceType(null)
+              setEditingTravelType(null)
             }
           />
         </div>
 
-        <section className="place-type-table-card">
-          <div className="place-type-table-card__header">
+        <div className="table-card">
+          <div className="table-header">
             <div>
               <h2>
-                Danh sách loại địa điểm
+                Danh sách loại du lịch
               </h2>
 
               <p>
                 Tổng{" "}
                 {
-                  placeTypes.length
-                } loại địa điểm
+                  travelTypes.length
+                } loại du lịch
               </p>
             </div>
           </div>
 
           {loading ? (
-            <div className="place-type-page__loading">
+            <div className="loading-box">
               <Loader2
                 size={24}
                 className="spin"
@@ -133,72 +147,69 @@ export default function PlaceTypeManagementPage() {
               </span>
             </div>
           ) : (
-            <div className="place-type-table-wrapper">
-              <table className="place-type-table">
+            <div className="table-wrapper">
+              <table className="travel-type-table">
                 <thead>
-                  <tr>
-                    <th>
-                      <button
-                        className="tag-table__sort"
-                        onClick={() =>
-                          handleSort("tag")
-                        }
-                      >
-                        Tên loại địa điểm
+                    <tr>
+                        <th>
+                        <button
+                            className="tag-table__sort"
+                            onClick={() =>
+                            handleSort("tag")
+                            }
+                        >
+                            Tên loại du lịch
 
-                        <ArrowUpDown
-                          size={15}
-                        />
-                      </button>
-                    </th>
+                            <ArrowUpDown
+                            size={15}
+                            />
+                        </button>
+                        </th>
 
-                    <th>
-                      Hành động
-                    </th>
-                  </tr>
+                        <th>Hành động</th>
+                    </tr>
+                
                 </thead>
 
                 <tbody>
-                  {sortedPlaceTypes.length ===
+                  {sortedTravelTypes.length ===
                   0 ? (
                     <tr>
                       <td
                         colSpan="2"
-                        className="place-type-table__empty"
+                        className="empty-text"
                       >
-                        Chưa có loại địa
-                        điểm nào
+                        Chưa có loại du
+                        lịch nào
                       </td>
                     </tr>
                   ) : (
-                    sortedPlaceTypes.map(
+                    sortedTravelTypes.map(
                       (item) => (
                         <tr
                           key={
-                            item.ma_loai
+                            item.ma_loai_du_lich
                           }
                         >
                           <td>
-                            <span className="place-type-table__name">
-                              {
-                                item.ten_loai
-                              }
-                            </span>
+                            {
+                              item.ten_loai
+                            }
                           </td>
 
                           <td>
-                            <div className="place-type-table__actions">
+                            <div className="action-buttons">
                               <button
-                                className="place-type-table__btn place-type-table__btn--edit"
+                                className="btn-edit"
                                 onClick={() =>
-                                  handleEditClick(
+                                  handleEdit(
                                     item
                                   )
                                 }
                               >
-                                <Edit
+                                <Pencil
                                   size={
-                                    16
+                                    15
                                   }
                                 />
 
@@ -206,16 +217,16 @@ export default function PlaceTypeManagementPage() {
                               </button>
 
                               <button
-                                className="place-type-table__btn place-type-table__btn--delete"
+                                className="btn-delete"
                                 onClick={() =>
                                   handleDelete(
-                                    item.ma_loai
+                                    item.ma_loai_du_lich
                                   )
                                 }
                               >
                                 <Trash2
                                   size={
-                                    16
+                                    15
                                   }
                                 />
 
@@ -231,7 +242,7 @@ export default function PlaceTypeManagementPage() {
               </table>
             </div>
           )}
-        </section>
+        </div>
       </div>
     </DashboardLayout>
   );
