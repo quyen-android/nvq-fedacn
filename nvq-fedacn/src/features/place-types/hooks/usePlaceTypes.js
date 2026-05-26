@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
 import {
   getPlaceTypes,
@@ -7,35 +10,70 @@ import {
   deletePlaceType,
 } from "../services/placeTypeService";
 
-export function usePlaceTypes() {
-  const [placeTypes, setPlaceTypes] = useState([]);
-  const [editingPlaceType, setEditingPlaceType] = useState(null);
+import { toast } from "react-toastify";
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+export function usePlaceTypes() {
+  const [placeTypes, setPlaceTypes] =
+    useState([]);
+
+  const [
+    editingPlaceType,
+    setEditingPlaceType,
+  ] = useState(null);
+
+  const [loading, setLoading] =
+    useState(false);
 
   async function loadPlaceTypes() {
     try {
       setLoading(true);
-      setError("");
 
-      const data = await getPlaceTypes();
+      const data =
+        await getPlaceTypes();
+
       setPlaceTypes(data);
     } catch (err) {
-      setError(err.message);
+      toast.error(
+        err.message ||
+          "Không thể tải loại địa điểm"
+      );
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleCreate(payload) {
+  async function reloadPlaceTypes() {
     try {
-      setError("");
+      const data =
+        await getPlaceTypes();
 
-      await createPlaceType(payload);
-      await loadPlaceTypes();
+      setPlaceTypes(data);
     } catch (err) {
-      setError(err.message);
+      toast.error(
+        err.message ||
+          "Không thể tải dữ liệu"
+      );
+    }
+  }
+
+  async function handleCreate(
+    payload
+  ) {
+    try {
+      await createPlaceType(
+        payload
+      );
+
+      toast.success(
+        "Thêm loại địa điểm thành công"
+      );
+
+      await reloadPlaceTypes();
+    } catch (err) {
+      toast.error(
+        err.message ||
+          "Có lỗi xảy ra"
+      );
     }
   }
 
@@ -44,8 +82,6 @@ export function usePlaceTypes() {
     payload
   ) {
     try {
-      setError("");
-
       await updatePlaceType(
         maLoai,
         payload
@@ -53,13 +89,22 @@ export function usePlaceTypes() {
 
       setEditingPlaceType(null);
 
-      await loadPlaceTypes();
+      toast.success(
+        "Cập nhật loại địa điểm thành công"
+      );
+
+      await reloadPlaceTypes();
     } catch (err) {
-      setError(err.message);
+      toast.error(
+        err.message ||
+          "Có lỗi xảy ra"
+      );
     }
   }
 
-  async function handleDelete(maLoai) {
+  async function handleDelete(
+    maLoai
+  ) {
     const ok = window.confirm(
       "Bạn có chắc muốn xóa loại địa điểm này không?"
     );
@@ -67,13 +112,20 @@ export function usePlaceTypes() {
     if (!ok) return;
 
     try {
-      setError("");
+      await deletePlaceType(
+        maLoai
+      );
 
-      await deletePlaceType(maLoai);
+      toast.success(
+        "Xóa loại địa điểm thành công"
+      );
 
-      await loadPlaceTypes();
+      await reloadPlaceTypes();
     } catch (err) {
-      setError(err.message);
+      toast.error(
+        err.message ||
+          "Có lỗi xảy ra"
+      );
     }
   }
 
@@ -86,7 +138,7 @@ export function usePlaceTypes() {
     editingPlaceType,
     setEditingPlaceType,
     loading,
-    error,
+
     handleCreate,
     handleUpdate,
     handleDelete,

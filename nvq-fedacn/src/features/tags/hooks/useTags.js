@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import {
   getTags,
   getPlaceTypes,
@@ -7,20 +11,27 @@ import {
   deleteTag,
 } from "../services/tagService";
 
+import { toast } from "react-toastify";
+
 export function useTags() {
   const [tags, setTags] = useState([]);
-  const [placeTypes, setPlaceTypes] = useState([]);
-  const [editingTag, setEditingTag] = useState(null);
+  const [placeTypes, setPlaceTypes] =
+    useState([]);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [editingTag, setEditingTag] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(false);
 
   async function loadData() {
     try {
       setLoading(true);
-      setError("");
 
-      const [tagsData, typesData] = await Promise.all([
+      const [
+        tagsData,
+        typesData,
+      ] = await Promise.all([
         getTags(),
         getPlaceTypes(),
       ]);
@@ -28,29 +39,95 @@ export function useTags() {
       setTags(tagsData);
       setPlaceTypes(typesData);
     } catch (err) {
-      setError(err.message);
+      toast.error(
+        err.message ||
+          "Không thể tải dữ liệu"
+      );
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleCreate(payload) {
-    await createTag(payload);
-    await loadData();
+  async function reloadTags() {
+    try {
+      const data = await getTags();
+
+      setTags(data);
+    } catch (err) {
+      toast.error(
+        err.message ||
+          "Không thể tải danh sách thẻ"
+      );
+    }
   }
 
-  async function handleUpdate(maThe, payload) {
-    await updateTag(maThe, payload);
-    setEditingTag(null);
-    await loadData();
+  async function handleCreate(
+    payload
+  ) {
+    try {
+      await createTag(payload);
+
+      toast.success(
+        "Thêm thẻ thành công"
+      );
+
+      await reloadTags();
+    } catch (err) {
+      toast.error(
+        err.message ||
+          "Có lỗi xảy ra"
+      );
+    }
   }
 
-  async function handleDelete(maThe) {
-    const ok = window.confirm("Bạn có chắc muốn xóa thẻ này không?");
+  async function handleUpdate(
+    maThe,
+    payload
+  ) {
+    try {
+      await updateTag(
+        maThe,
+        payload
+      );
+
+      setEditingTag(null);
+
+      toast.success(
+        "Cập nhật thẻ thành công"
+      );
+
+      await reloadTags();
+    } catch (err) {
+      toast.error(
+        err.message ||
+          "Có lỗi xảy ra"
+      );
+    }
+  }
+
+  async function handleDelete(
+    maThe
+  ) {
+    const ok = window.confirm(
+      "Bạn có chắc muốn xóa thẻ này không?"
+    );
+
     if (!ok) return;
 
-    await deleteTag(maThe);
-    await loadData();
+    try {
+      await deleteTag(maThe);
+
+      toast.success(
+        "Xóa thẻ thành công"
+      );
+
+      await reloadTags();
+    } catch (err) {
+      toast.error(
+        err.message ||
+          "Có lỗi xảy ra"
+      );
+    }
   }
 
   useEffect(() => {
@@ -63,7 +140,7 @@ export function useTags() {
     editingTag,
     setEditingTag,
     loading,
-    error,
+
     handleCreate,
     handleUpdate,
     handleDelete,
