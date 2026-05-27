@@ -5,3 +5,4 @@ npm install lucide-react
 npm install sass
 npm install recharts lucide-react
 npm install react-toastify
+npm install country-state-city

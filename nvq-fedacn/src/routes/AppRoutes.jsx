@@ -16,6 +16,8 @@ import PlaceTypeManagementPage from "../features/place-types/pages/PlaceTypeMana
 import TravelTypeManagementPage from "../features/travel-types/pages/TravelTypeManagementPage";
 import FoodPreferenceManagementPage from "../features/food-preferences/pages/FoodPreferenceManagementPage";
 import SpecialNeedManagementPage from "../features/special-needs/pages/SpecialNeedManagementPage";
+import ProvinceManagementPage from "../features/provinces/pages/ProvinceManagementPage";
+import PlaceManagementPage from "../features/places/pages/PlaceManagementPage";
 
 export default function AppRoutes() {
   return (
@@ -28,24 +30,18 @@ export default function AppRoutes() {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route path="/trips/create" element={<CreateTripPage />} />
-
       <Route path="/itinerary/:maChuyenDi" element={<ItineraryResultPage />} />
-
       <Route path="/itineraries" element={<MyItineraryPage />} />
-
       <Route path="/itineraries/:maChuyenDi/edit" element={<EditItineraryPage />} />
       
       <Route path="/admin" element={<AdminOverviewPage />}/>
-
       <Route path="/admin/tags" element={<TagManagementPage />} />
-
       <Route path="/admin/place-types" element={<PlaceTypeManagementPage />}/>
-      
       <Route path="/admin/travel-types" element={<TravelTypeManagementPage />}/>
-
       <Route path="/admin/food-preferences" element={<FoodPreferenceManagementPage />}/>
-      
       <Route path="/admin/special-needs" element={<SpecialNeedManagementPage />}/>
+      <Route path="/admin/provinces" element={<ProvinceManagementPage />}/>
+      <Route path="/admin/places" element={<PlaceManagementPage />}/>
       
     </Routes>);
 }
